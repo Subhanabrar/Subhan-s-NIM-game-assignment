@@ -1,0 +1,103 @@
+import time #Grabs time for Python code to understand the concept time
+
+#Function to get player names, assign players 1 and 2 and start the game
+def playerselection(): #defines the function "playerselection"
+
+    print("Welcome to the game of NIM!")
+    time.sleep(1) #delays time of output by one second
+    print("Time to decide who player 1 and 2 is.")
+    time.sleep(1)
+    Player_1 = input("Player 1: Please enter your name to begin the game:").strip() #assign player 1
+    Player_2 = input("Player 2: Please enter your name to begin the game:").strip() #assign player 2
+
+    #following if statements do not allow players to leave their names blank. If left blank they will return to player selection
+    if Player_1 == "":
+        print("Gameover")
+        return playerselection()
+
+    else:
+        print("Hey "+ Player_1 + ", You are Player 1 and will be going first in the game of nim")
+
+    if Player_2 == "":
+        print("Gameover")
+        return playerselection()
+
+    else:
+        print("Hey "+ Player_2 + ", You are Player 2 and will be going second in the game of nim")
+
+    return Player_1, Player_2, 
+  
+#function to display the rules of the game
+def rules_explained():
+
+    print("Let's explain the objective of the game aswell as some rules")
+    time.sleep(2)
+    print("Nim is a game of strategy")
+    time.sleep(2)
+    print("The objective of the game is to be the player that takes the last marble")
+    time.sleep(2)
+    print("Force your opponent through creating situations that will favor your ability to achieve this goal")
+    time.sleep(2)
+    print("Each player will take turns picking a sac (1-5), and then a number of marbles form that sac")
+    time.sleep(2)
+    print("You are allowed to take as many marbles from a sac as you want, but be cautious!")
+    time.sleep(2)
+    print("FORCE YOUR OPPONENT TO PICK THE LAST MARBLE!")
+
+#Function that displays the amount of sacs and marbles in sacs. Displayed in pyramid form.
+def display_pyramid(sacs):
+    print("Display the current sacs of marbles in a pyramid shape.")
+    print("\nCurrent sacs:")
+
+    sac_number = 1  #Keeps track of sac number
+    for marbles in sacs:
+        print("Sac", sac_number, ": " + "🔘 " * marbles) #displays marbles in sac 
+        sac_number += 1  #
+    print("\n")
+
+#Function for min gameplay such as player turns and choices
+def choosesac(Player_1, Player_2):
+    sacs = [5, 7, 9, 11, 13]  # Initial sacs with marbles
+    player_turn = 1  # Start with Player 1
+
+    while sum(sacs) > 0:  # While loop to continue until all marbles are taken
+        display_pyramid(sacs)  # Show current sacs
+
+        current_player = Player_1 if player_turn == 1 else Player_2  # Determine current player. If player turn is not 1, player 2 goes
+        sac_choice = int(input(f"{current_player}, choose a sac (1-5): ")) - 1  # Get sac choice though asking player using f string. 
+        
+        if sac_choice < 0 or sac_choice >= len(sacs):  # Validate sac choice
+            print("Invalid sac choice. Try again.")
+            continue
+
+        marbles_in_sac = sacs[sac_choice]
+        if marbles_in_sac == 0:  # Check if sac is empty
+            print(f"Sac {sac_choice + 1} is empty. Choose another one.")
+            continue
+
+        marbles_to_take = int(input(f"How many marbles would you like to take from Sac {sac_choice + 1} (1-{marbles_in_sac})? "))  # Get number of marbles from player
+        
+        if marbles_to_take < 1 or marbles_to_take > marbles_in_sac:  # Validate number of marbles
+            print("Invalid number of marbles. Try again.")
+            continue
+
+        sacs[sac_choice] -= marbles_to_take  # Update the number of marbles in the chosen sac
+
+        if sum(sacs) == 0:  # Check if all marbles are taken
+            print(f"\n{current_player} was forced into taking the last marble and losses!")
+
+        player_turn = 1 if player_turn == 2 else 2 #switch player turns
+
+    #option to play again if game ends
+    playagain = input("Do you want to play again?\nYes (Y) or No (N):")
+
+    if playagain == "Y":
+        Player_1, Player_2 = playerselection()  # Get player names
+        rules_explained()  # Explain the rules
+        choosesac(Player_1, Player_2,)  # Start the game
+    else:
+        quit()
+
+Player_1, Player_2 = playerselection()  # Get player names
+rules_explained()  # Explain the rules
+choosesac(Player_1, Player_2,)  # Start the game
